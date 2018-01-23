@@ -1,0 +1,44 @@
+body {
+    padding: 0;
+    margin: 0;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+#video-content {
+    background-color: black;
+    height: 100%;
+    width: 89%;
+}
+
+#video-content {
+    display: block;
+    margin: 0 auto;
+}
+
+#player-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+}
+#player-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/*#player {
+    display: block;
+    margin: 0 auto;
+}
+
+#player-container {
+    opacity: 0;
+}
+*/
+a {
+    color: #00B7FF;
+}
+
+/* allow authenticated users to include justom scripts in their pages */

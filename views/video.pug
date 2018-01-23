@@ -1,0 +1,51 @@
+extends layout
+
+block content
+    div#video-content
+        div#player-container
+            div#player
+
+    script(src='/javascripts/jquery-3.3.1.min.js')
+    script(src='/javascripts/helpers.js')
+    
+    script.
+        $(function() {
+            var getPlayerVars = function(videoId) {
+                var playerVars = {
+                    autoplay: 1
+                };
+                switch (videoId) {
+                    case '9Koln22mx6c':
+                        playerVars.start = 65;
+                        playerVars.end = 70;
+                        break;
+                }
+                return playerVars;
+            }; 
+            
+            TazGHelpers.whenYoutubeApiReady(function() {
+                var handlers = {};
+                var player;
+                var timeoutQueued = false;
+                handlers[YT.PlayerState.PLAYING] = function() {
+                    if (!timeoutQueued && player.getVideoData().video_id == 'HKK4KmDlj8U') {
+                        setTimeout(function() {
+                            $("#player-container").animate({opacity: 0}, 500);
+                            timeoutQueued = true;
+                        }, 8600);
+                    }
+                    $("#player-container").animate({opacity: 1}, 250);
+                    console.log("playing");
+                };     
+                
+                TazGHelpers.addYTPlayer("player", {
+                    videoId: '#{videoId}',
+                    playerVars: getPlayerVars('#{videoId}')
+                }, 
+                function(p) {
+                    player = p;
+                    TazGHelpers.addYTPlayerStateHandlers(player, handlers);
+                    console.log(player);
+                });
+            });
+        });

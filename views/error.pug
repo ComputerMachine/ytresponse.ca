@@ -1,0 +1,7 @@
+extends layout
+
+block content
+  h1= "what the fuck it's " + message
+  h2= error.status
+  pre #{error.stack}
+  small 

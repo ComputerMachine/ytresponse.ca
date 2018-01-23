@@ -1,0 +1,28 @@
+/* db layout */
+
+CREATE DATABASE ytresponse;
+CREATE USER ytresponse_user WITH PASSWORD 'shesellsseashellsontheseashore';
+GRANT ALL PRIVILEGES ON DATABASE ytresponse TO ytresponse_user;
+
+CREATE TABLE yt_user (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(128),
+    password BYTEA,
+    group_id SMALLINT,
+    email VARCHAR(128),
+    date TIMESTAMP WITHOUT TIME ZONE,
+    ip VARCHAR(20)    
+);
+CREATE TABLE yt_video (
+    id SERIAL,
+    video_id VARCHAR(11),
+    script TEXT,
+    author_id SMALLINT REFERENCES yt_user (id),
+    date TIMESTAMP WITHOUT TIME ZONE
+);
+CREATE TABLE yt_group (
+    id SERIAL,
+    permission SMALLINT,
+    name VARCHAR(128),
+    description VARCHAR(1028)
+);
