@@ -28,6 +28,10 @@ body {
     height: 100%;
 }
 
+.button-nav button {
+    display: block;
+}
+
 /*#player {
     display: block;
     margin: 0 auto;

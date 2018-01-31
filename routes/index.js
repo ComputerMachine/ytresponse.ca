@@ -5,14 +5,16 @@ var project = 'Youtube Response';
 var pool = require('../db');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-    pool.connect(function(err, client, done) {
-        if (err) consol.log("DB ERROR");
-        client.query("SELECT NOW()", function(err, res) {
-            console.log(res);
-        })
-    });
-    res.render('index', {
+router.get('/', function(request, response, next) {
+
+    if (request.session.auth) {
+        console.log(request.session.auth);
+    } else {
+        console.log("no session");
+    }
+    
+    
+    response.render('index', {
         title: project,
     });
 });

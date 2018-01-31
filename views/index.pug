@@ -2,8 +2,13 @@ extends layout
 
 block content
     div.container
-        div.rows
-            div.col-md-6.col-md-6-offset
+        div.row
+            div.col-md-6.button-nav
+                h1 nav
+                a(href="/login").btn.btn-outline-primary.btn-block log in
+                a(href="/register").btn.btn-outline-primary.btn-block register
+                a(href="https://fgfrefugees.ca").btn.btn-outline-primary.btn-block free games forum
+            div.col-md-6
                 h1 latest responses
                 - for (var i=0; i<=10; i++)
                     li= i

@@ -2,6 +2,7 @@ var express = require('express');
 var bcrypt = require('bcrypt');
 var router = express.Router();
 var project = 'Youtube Response';
+var session = require('express-session');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -18,17 +19,24 @@ router.post('/', function(request, response, next) {
         
         var sqlQuery = "SELECT encode(password::bytea, 'escape') AS pw FROM yt_user WHERE username = $1";
         client.query(sqlQuery, [request.body.username], function(err, res) {
-            if (err) console.log(err);
-            else {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            try {
                 var hashedpw = res.rows[0].pw;
                 bcrypt.compare(request.body.password, hashedpw, function(err, res) {
                     if (res) {
-                        response.send("yep all good");                    
+                        response.send("yep all good");
+                        request.session.auth = {username: request.body.username, permission: "admin"};
                     } 
                     else {
                         response.send("NOPE");    
                     }
                 });
+            } 
+            catch(TypeError) {
+                response.send("Username not found.");
             }        
         });
     });
