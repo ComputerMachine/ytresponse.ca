@@ -1,5 +1,6 @@
 var express = require('express');
 var bcrypt = require('bcrypt');
+var pool = require('../db');
 var router = express.Router();
 var project = 'Youtube Response';
 
@@ -18,25 +19,67 @@ router.post('/', function(req, res, next) {
     var email = req.body.email;
     
     if (password != password2) {
-        res.send("INVALID PASSWORD TURKEY FUKER");
+        res.send("The passwords you entered did not match.");
     }
     
+    pool.connect(function(err, client, done) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        
+        var checkUserQuery = "SELECT username AS exists FROM yt_user WHERE username = $1";
+        var createUserQuery = "INSERT INTO yt_user(username, password, email, date) VALUES($1, $2, $3, NOW())";
+
+        client.query(checkUserQuery, [username], function(clientErr, clientRes) {
+            if (clientErr) {
+                console.log(clientErr);
+                return;
+            }
+            var usernameExists = clientRes.rows[0] ? true : false;
+            
+            if (usernameExists) {
+                res.send("Username already exists. Please choose a different one.");
+                return;
+            }
+            else {
+                bcrypt.hash(password, 12, function(hashErr, hash) {
+                    client.query(createUserQuery, [username, hash, email], function(clientErr, clientRes) {
+                        if (clientErr) {
+                            console.log(clientErr);
+                            return;
+                        }
+                        console.log(clientRes);
+                        console.log(username, password);
+                        console.log("User added to database.");
+                        res.redirect("/login");
+                    });
+                });
+            };
+        });
+        done();
+    });
+    
+    
+    /*
     console.log(username, password, email);
     
     bcrypt.hash(password, 12, function(err, hash) {
-        var pool = require('../db');
         pool.connect(function(err, client, done) {
-            if (err) consol.log("DB ERROR");
-            var sqlQuery = "INSERT INTO yt_user(username, password, email) VALUES($1, $2, $3)";
-            client.query(sqlQuery, [username, hash, email], function(err, res) {
-                if (err) console.log(err);
-                console.log(res);
+            if (err) {
+                console.log("DB ERROR");
+                return;
+            }
+            var sqlQuery = "INSERT INTO yt_user(username, password, email, date) VALUES($1, $2, $3, NOW())";
+            client.query(sqlQuery, [username, hash, email], function(clientErr, clientRes) {
+                if (clientErr) console.log(clientErr);
+                console.log(clientRes);
             });
             done();
         });
     })
-    
-    res.send("yep");
+    */
+    //res.send("yep");
 });
 
 module.exports = router;

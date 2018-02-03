@@ -1,0 +1,36 @@
+extends ../layout
+
+block content
+    div.container
+        
+        div.row
+            div.col-md-8
+                div#player
+            div.col-md-4
+                form(method='POST' action='/create-response')
+                    div.form-group
+                        label(for='url') Youtube URL:
+                        input.form-control(id='video-id', type='text', name='url')
+                    div.form-group
+                        label(for='password') Start:
+                        input.form-control(id='start', type='text', name='start')
+                    div.form-group
+                        label(for='password') End:
+                        input.form-control(id='end', type='text', name='end')
+                    div.btn-group(data-toggle='buttons')
+                        label.btn.btn-primary.active
+                            input#autoplay(type='checkbox', name='autoplay', autocomplete='off', checked)
+                            span Autoplay
+
+                    div.form-group
+                        label(for='password') Comment:
+                        input#name.form-control(type='text', name='comment')
+                    div.form-group
+                        label(for='password') Custom script:
+                        input#name.form-control(type='text', name='script')
+
+                    button#preview.btn.btn-primary(type='submit') Preview
+                    button#create.btn.btn-primary(type='submit') Create Response
+                    
+            
+    script(src='javascripts/response.js')

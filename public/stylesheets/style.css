@@ -32,6 +32,28 @@ body {
     display: block;
 }
 
+
+/*.navbar-dark {
+    background-color: #42586e;
+}*/
+
+.nav-item a {
+    color: #42586e;
+}
+.nav-item a:hover {
+    color: #2A2A2A;
+}
+/*
+.navbar-dark {
+    color: #2A2A2A;
+}*/
+
+.navbar-brand {
+    color: #fff;
+}
+
+/*42586e*/
+
 /*#player {
     display: block;
     margin: 0 auto;

@@ -8,7 +8,7 @@ CREATE TABLE yt_user (
     id SERIAL PRIMARY KEY,
     username VARCHAR(128),
     password BYTEA,
-    group_id SMALLINT,
+    group_id SMALLINT REFERENCES yt_group (id),
     email VARCHAR(128),
     date TIMESTAMP WITHOUT TIME ZONE,
     ip VARCHAR(20)    
@@ -16,13 +16,63 @@ CREATE TABLE yt_user (
 CREATE TABLE yt_video (
     id SERIAL,
     video_id VARCHAR(11),
+    video_start INT,
+    video_end INT,
+    autoplay SMALLINT,
     script TEXT,
     author_id SMALLINT REFERENCES yt_user (id),
     date TIMESTAMP WITHOUT TIME ZONE
 );
 CREATE TABLE yt_group (
-    id SERIAL,
+    id SERIAL PRIMARY KEY,
     permission SMALLINT,
     name VARCHAR(128),
     description VARCHAR(1028)
 );
+
+/* Insert default groups */
+/*
+    permission id | authorization
+    1            admin
+    2            moderator
+    3            regular user
+    4            non validated user
+    5            banned user
+*/
+
+INSERT INTO yt_group(permission, name, description) VALUES (
+    1,
+    'admin',
+    'Elevated privileges, able to modify or delete any YT response and ban users.'
+);
+INSERT INTO yt_group(permission, name, description) VALUES (
+    2,
+    'moderator',
+    'Elevated privileges, able to modify or delete any YT response and ban users.'
+);
+INSERT INTO yt_group(permission, name, description) VALUES (
+    3,
+    'user',
+    'Create, modify and delete YT responses that belong to this user.'
+);
+INSERT INTO yt_group(permission, name, description) VALUES (
+    4,
+    'non-validated user',
+    'This fella can''t do jack shit yet.'
+);
+INSERT INTO yt_group(permission, name, description) VALUES (
+    5,
+    'banned',
+    'This fella can''t do jack shit.'
+);
+
+
+url routes:
+
+1. custom url routing
+localhost:3000/#{username}/#{custom_url}
+localhost:3000/tazg2000/jonglaser
+
+2. generate a unique id for every response
+localhost:3000/v/#{uniqueId}
+

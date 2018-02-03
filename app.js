@@ -11,6 +11,7 @@ var index = require('./routes/index');
 var video = require('./routes/video');
 var login = require('./routes/login');
 var register = require('./routes/register');
+var user = require('./routes/user');
 
 var app = express();
 
@@ -29,7 +30,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
     secret: 'closebutnoguitar', 
-    cookie: {maxAge: 60000},
+    cookie: {maxAge: 1000*60*60},
     saveUninitialized: true
 }));
 
@@ -37,6 +38,15 @@ app.use('/', index);
 app.use('/v', video);
 app.use('/login', login);
 app.use('/register', register);
+app.use('/u/', user);
+
+/* video response routes */
+var createResponse = require('./routes/response/create');
+
+app.use('/create-response', createResponse);
+//app.use('/edit-response', editResponse);
+//app.use('/delete-response', deleteResponse);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

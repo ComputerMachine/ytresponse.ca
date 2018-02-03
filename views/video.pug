@@ -10,6 +10,14 @@ block content
     
     script.
         $(function() {
+            var lightsOff = function() {
+                $("nav").css({opacity: 0});
+                $("body").css({backgroundColor: "black"});
+            },
+            lightsOn = function() {
+                $("nav").animate({opacity: 1}, 500);
+                $("body").animate({backgroundColor: "transparent"});
+            }
             var getPlayerVars = function(videoId) {
                 var playerVars = {
                     autoplay: 1
@@ -39,8 +47,12 @@ block content
                 };     
                 
                 TazGHelpers.addYTPlayer("player", {
-                    videoId: '#{videoId}',
-                    playerVars: getPlayerVars('#{videoId}')
+                    videoId: '#{playerData.video_id}',
+                    playerVars: {
+                        start: '#{playerData.video_start}',
+                        end: '#{playerData.video_end}',
+                        autoplay: '#{playerData.autoplay}'
+                    }
                 }, 
                 function(p) {
                     player = p;

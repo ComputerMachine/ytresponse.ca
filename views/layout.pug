@@ -1,8 +1,23 @@
 doctype html
 html
-  head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    block content
+    head
+        title= title
+        link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+        link(rel='stylesheet', href='/stylesheets/style.css')
+        script(src='javascripts/jquery-3.3.1.min.js')
+    body
+        div.container
+            nav.navbar.navbar-expand-sm
+                a.navbar-brand YT Response
+                ul.navbar-nav.mr-auto
+                    li.nav-item
+                        a(href="/").nav-link Home
+                    li.nav-item
+                        a(href="/login").nav-link Log in
+                    li.nav-item
+                        a(href="/register").nav-link Register
+                if auth
+                    span.text-right Welcome back, #{auth.username}.
+            block content
+
+        script(src='javascripts/helpers.js')
