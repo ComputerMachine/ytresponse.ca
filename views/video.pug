@@ -16,8 +16,11 @@ block content
             },
             lightsOn = function() {
                 $("nav").animate({opacity: 1}, 500);
-                $("body").animate({backgroundColor: "transparent"});
-            }
+                $("body").css({backgroundColor: "white"});
+            };
+            
+            lightsOff();
+            
             var getPlayerVars = function(videoId) {
                 var playerVars = {
                     autoplay: 1
@@ -32,9 +35,14 @@ block content
             }; 
             
             TazGHelpers.whenYoutubeApiReady(function() {
-                var handlers = {};
                 var player;
-                var timeoutQueued = false;
+                var handlers = {};
+                
+                handlers[YT.PlayerState.ENDED] = lightsOn;
+                handlers[YT.PlayerState.PLAYING] = lightsOff;
+                handlers[YT.PlayerState.PAUSED] = lightsOn;
+
+                /*var timeoutQueued = false;
                 handlers[YT.PlayerState.PLAYING] = function() {
                     if (!timeoutQueued && player.getVideoData().video_id == 'HKK4KmDlj8U') {
                         setTimeout(function() {
@@ -45,7 +53,7 @@ block content
                     $("#player-container").animate({opacity: 1}, 250);
                     console.log("playing");
                 };     
-                
+                */
                 TazGHelpers.addYTPlayer("player", {
                     videoId: '#{playerData.video_id}',
                     playerVars: {

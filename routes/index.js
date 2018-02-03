@@ -7,18 +7,23 @@ var project = 'Youtube Response';
 router.get('/', function(req, res, next) {
     pool.connect(function(err, client, done) {
         var newestUsersQuery = "SELECT username, date FROM yt_user ORDER BY date DESC LIMIT 5";
+        var newestVideosQuery = "SELECT id, title, video_id, video_start, video_end, autoplay, author_id FROM yt_video ORDER BY DATE DESC LIMIT 5"
+        
         client.query(newestUsersQuery, function(clientErr, clientRes) {
             if (clientErr) console.log(clientErr);
             
-            console.log(clientRes.rows);
-            
-            res.render('index', {
-                title: project,
-                auth: req.session.auth,
-                newMembers: clientRes.rows
+            var newestMembers = clientRes.rows;
+            client.query(newestVideosQuery, function(clientErr, clientRes) {
+                var newestVideos = clientRes.rows;
+                
+                res.render('index', {
+                    title: project,
+                    auth: req.session.auth,
+                    newMembers: newestMembers,
+                    newVideos: newestVideos
+                });
+                
             });
-            
-            
         });
     });
     

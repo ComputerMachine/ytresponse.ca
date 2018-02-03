@@ -19,6 +19,7 @@ CREATE TABLE yt_video (
     video_start INT,
     video_end INT,
     autoplay SMALLINT,
+    title VARCHAR(256),
     script TEXT,
     author_id SMALLINT REFERENCES yt_user (id),
     date TIMESTAMP WITHOUT TIME ZONE
