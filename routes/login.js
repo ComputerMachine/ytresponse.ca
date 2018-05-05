@@ -16,31 +16,23 @@ router.post('/', function(request, response, next) {
     pool.connect(function(err, client, done) {
         if (err) console.log("DB ERROR");
         
-        var sqlQuery = "SELECT encode(password::bytea, 'escape') AS pw FROM yt_user WHERE username = $1";
-        client.query(sqlQuery, [request.body.username], function(err, res) {
-            if (err) {
-                console.log(err);
-                return;
+        var sqlQuery = "SELECT username, encode(password::bytea, 'escape') AS pw FROM yt_user WHERE LOWER(username) = $1";
+        client.query(sqlQuery, [request.body.username.toLowerCase()], function(clientErr, clientRes) {
+            if (err) console.log(err);
+            
+            if (typeof clientRes.rows[0] == "undefined") {
+                return response.send("That username doesn't exist.");
             }
-            try {
-                var hashedpw = res.rows[0].pw;
-                bcrypt.compare(request.body.password, hashedpw, function(err, res) {
-                    if (res) {
-                        request.session.auth = {
-                            username: request.body.username, 
-                            permission: "admin"
-                        };
-                        response.redirect('../');
-                        //response.send("yep all good");
-                    } 
-                    else {
-                        response.send("NOPE");    
-                    }
-                });
-            } 
-            catch(TypeError) {
-                response.send("Username not found.");
-            }
+
+            var hashedPassword = clientRes.rows[0].pw;
+            var username = clientRes.rows[0].username;
+            
+            bcrypt.compare(request.body.password, hashedPassword, function(err, res) {
+                if (!res) return response.send("Invalid password or username.");
+                
+                request.session.auth = {username: username};
+                response.redirect("../");
+            });
             done();
         });
     });

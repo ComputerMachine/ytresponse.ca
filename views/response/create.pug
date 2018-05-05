@@ -9,8 +9,11 @@ block content
             div.col-md-4
                 form(method='POST' action='/create-response')
                     div.form-group
+                        label(for='title') Title:
+                        input.form-control(id='title', type='text', name='title')
+                    div.form-group
                         label(for='url') Youtube URL:
-                        input.form-control(id='video-id', type='text', name='url')
+                        input.form-control(id='video-id', type='text', name='videoId')
                     div.form-group
                         label(for='password') Start:
                         input.form-control(id='start', type='text', name='start')

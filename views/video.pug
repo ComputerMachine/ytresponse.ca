@@ -5,31 +5,34 @@ block content
         div#player-container
             div#player
 
-    script(src='/javascripts/jquery-3.3.1.min.js')
-    script(src='/javascripts/helpers.js')
+    script(src='../javascripts/jquery-3.3.1.min.js')
+    script(src='../javascripts/helpers.js')
     
     script.
         $(function() {
             var lightsOff = function() {
-                $("nav").css({opacity: 0});
+                $("nav").css({opacity: 0}, 1000);
                 $("body").css({backgroundColor: "black"});
             },
             lightsOn = function() {
-                $("nav").animate({opacity: 1}, 500);
+                $("nav").animate({opacity: 1}, 1000);
                 $("body").css({backgroundColor: "white"});
             };
             
             lightsOff();
             
             var getPlayerVars = function(videoId) {
-                var playerVars = {
-                    autoplay: 1
-                };
+                var playerVars = {};
                 switch (videoId) {
                     case '9Koln22mx6c':
+                        playerVars.autoplay = 1;
                         playerVars.start = 65;
                         playerVars.end = 70;
                         break;
+                    default:
+                        playerVars.start = '#{playerData.video_start}',
+                        playerVars.end = '#{playerData.video_end}',
+                        playerVars.autoplay = '#{playerData.autoplay}'
                 }
                 return playerVars;
             }; 
@@ -39,8 +42,8 @@ block content
                 var handlers = {};
                 
                 handlers[YT.PlayerState.ENDED] = lightsOn;
-                handlers[YT.PlayerState.PLAYING] = lightsOff;
                 handlers[YT.PlayerState.PAUSED] = lightsOn;
+                handlers[YT.PlayerState.PLAYING] = lightsOff;
 
                 /*var timeoutQueued = false;
                 handlers[YT.PlayerState.PLAYING] = function() {
@@ -56,11 +59,7 @@ block content
                 */
                 TazGHelpers.addYTPlayer("player", {
                     videoId: '#{playerData.video_id}',
-                    playerVars: {
-                        start: '#{playerData.video_start}',
-                        end: '#{playerData.video_end}',
-                        autoplay: '#{playerData.autoplay}'
-                    }
+                    playerVars: getPlayerVars('#{playerData.video_id}')
                 }, 
                 function(p) {
                     player = p;

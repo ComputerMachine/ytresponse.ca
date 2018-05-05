@@ -42,18 +42,17 @@ $(function() {
     
     $("#video-id").change(function() {
         var videoId = $(this).val();
-        var start = $("#start").val();
-        var end = $("#end").val();
-        if (videoId == "") {
-            return;
-        }
-        else if (start && end == "")
+        var videoStart = $("#start").val();
+        var videoEnd = $("#end").val();
+        
+        if (videoId == "") return;
+        if (videoStart && videoEnd == "")
             player.cueVideoById(videoId);
         else {
             player.cueVideoById(
                 videoId,
-                start,
-                end
+                videoStart,
+                videoEnd
             );
         }
     });

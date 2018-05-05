@@ -7,7 +7,7 @@ var project = "Youtube Response";
 router.get('/', function(req, res, next) {
     res.render('video', {
         title: project,
-        videoId: "9Koln22mx6c"
+        playerData: {video_id: "9Koln22mx6c", start: 65, end:70, autoplay:1}
     })
 });
 
@@ -20,7 +20,7 @@ router.get('/:serialId', function(req, res, next) {
         client.query(videoQuery, [serialId], function(clientErr, clientRes) {
             if (clientErr) console.log(clientErr);
             
-            console.log(clientRes.row);
+            console.log(clientRes);
             
             res.render('video', {
                 title: project,

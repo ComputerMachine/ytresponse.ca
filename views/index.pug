@@ -12,11 +12,13 @@ block content
             div.col-md-6
                 h1 newest users
                 div.list-group
-                    each member in newMembers
-                        a(href=`/u/${member.username}`).list-group-item.list-group-item-action=member.username
+                    if typeof newMembers != "undefined"
+                        each member in newMembers
+                            a(href=`/u/${member.username}`).list-group-item.list-group-item-action=member.username
                     
             div.col-md-6
                 h1 newest responses
                 ul.list-group
-                    each video in newVideos
-                        a(href=`/v/${video.id}`).list-group-item.list-group-item-action=video.title
+                    if typeof newVideos != "undefined"
+                        each video in newVideos
+                            a(href=`/v/${video.id}`).list-group-item.list-group-item-action=video.title

@@ -3,7 +3,7 @@ var pg = require('pg');
 var config = {
     user: 'ytresponse_user',
     database: 'ytresponse',
-    password: 'shesellsseashellsontheseashore',
+    password: 'she sells seashells on the seashore',
     host: 'localhost',
     port: 5432,
     max: 10,

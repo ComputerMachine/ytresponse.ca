@@ -2,4 +2,8 @@ extends layout
 
 block content
     div.container
-        sup
+        div.col-md-6
+            h1 newest responses
+            ul.list-group
+                each video in userVideos
+                    a(href=`/v/${video.id}`).list-group-item.list-group-item-action=video.title
