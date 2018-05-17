@@ -11,15 +11,3 @@ var config = {
 }
 
 module.exports = new pg.Pool(config);
-
-/*module.exports = {
-    query: function(text, values, cb) {
-        var pool = new pg.Pool(config);
-        pool.connect(function(err, client, done) {
-            client.query(text, values, function(err, result) {
-                done();
-                cb(err, result);
-            }) 
-        });
-    }
-};*/

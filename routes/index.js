@@ -3,27 +3,27 @@ var pool = require('../db');
 var router = express.Router();
 var project = 'Youtube Response';
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-    pool.connect(function(err, client, done) {
+
+router.get('/', (req, res, next) => {
+    pool.connect((err, client, done) => {
         if (typeof client == "undefined") {
             res.send("Error connecting to database.");
             return;
         }
         
-        console.log(client);
-        
+        var newestMembers, newestVideos;
         var newestUsersQuery = "SELECT username, date FROM yt_user ORDER BY date DESC LIMIT 5";
         var newestVideosQuery = "SELECT id, title, video_id, video_start, video_end, autoplay, author_id FROM yt_video ORDER BY DATE DESC LIMIT 5"
         
-        client.query(newestUsersQuery, function(clientErr, clientRes) {
-            if (typeof clientRes != "undefined") {
-                newestMembers = clientRes.rows;
-            }
-            
-            var newestMembers, newestVideos;
-            
-            client.query(newestVideosQuery, function(clientErr, clientRes) {
+        client.query(newestUsersQuery)
+            .then(clientRes => {
+                if (typeof clientRes != "undefined") {
+                    newestMembers = clientRes.rows;
+                }
+            });
+        
+        client.query(newestVideosQuery)
+            .then(clientRes => {
                 if (typeof clientRes != "undefined") {
                     newestVideos = clientRes.rows;
                 }
@@ -33,24 +33,13 @@ router.get('/', function(req, res, next) {
                     newMembers: newestMembers,
                     newVideos: newestVideos
                 });
-                
+            })
+            .catch(e => {
+                console.log("--------------------------- WHAT THE FUCK: ", e);
             });
-            done();
-        });
-        
+            
+        client.release();
     });
 });
 
 module.exports = router;
-
-/*
-var query = client.query("SELECT NOW()", function(err, res) {
-    console.log(res);
-});
-var sqlQuery = "SELECT encode(password::bytea, 'escape') AS pw FROM yt_user WHERE username = $1";
-        client.query(sqlQuery, [request.body.username], function(err, res) {
-            if (err) {
-                console.log(err);
-                return;
-            }
-done();*/

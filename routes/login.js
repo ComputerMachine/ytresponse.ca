@@ -17,6 +17,7 @@ router.post('/', function(request, response, next) {
         if (err) console.log("DB ERROR");
         
         var sqlQuery = "SELECT username, encode(password::bytea, 'escape') AS pw FROM yt_user WHERE LOWER(username) = $1";
+        
         client.query(sqlQuery, [request.body.username.toLowerCase()], function(clientErr, clientRes) {
             if (err) console.log(err);
             
@@ -33,8 +34,9 @@ router.post('/', function(request, response, next) {
                 request.session.auth = {username: username};
                 response.redirect("../");
             });
-            done();
         });
+        
+        client.release();
     });
 });
 

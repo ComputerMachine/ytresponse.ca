@@ -12,11 +12,11 @@ block content
         $(function() {
             var lightsOff = function() {
                 $("nav").css({opacity: 0}, 1000);
-                $("body").css({backgroundColor: "black"});
+                $("body").animate({backgroundColor: "black"});
             },
             lightsOn = function() {
                 $("nav").animate({opacity: 1}, 1000);
-                $("body").css({backgroundColor: "white"});
+                $("body").animate({backgroundColor: "white"});
             };
             
             lightsOff();

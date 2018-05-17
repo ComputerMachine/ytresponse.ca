@@ -20,6 +20,7 @@ router.get('/:username', function(req, res, next) {
                 userVideos: userVideos,
             });
         });
+        client.release();
     });
 });
 

@@ -2,13 +2,26 @@
 
 CREATE DATABASE ytresponse;
 CREATE USER ytresponse_user WITH PASSWORD 'she sells seashells on the seashore';
+
 GRANT ALL PRIVILEGES ON DATABASE ytresponse TO ytresponse_user;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO ytresponse_user;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO ytresponse_user;
+
 
 CREATE TABLE yt_group (
     id SERIAL PRIMARY KEY,
     permission SMALLINT,
     name VARCHAR(128),
     description VARCHAR(1028)
+);
+CREATE TABLE yt_user (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(128),
+    password BYTEA,
+    group_id SMALLINT REFERENCES yt_group (id),
+    email VARCHAR(128),
+    date TIMESTAMP WITHOUT TIME ZONE,
+    ip VARCHAR(20)    
 );
 CREATE TABLE yt_video (
     id SERIAL,
@@ -20,15 +33,6 @@ CREATE TABLE yt_video (
     script TEXT,
     author_id SMALLINT REFERENCES yt_user (id),
     date TIMESTAMP WITHOUT TIME ZONE
-);
-CREATE TABLE yt_user (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(128),
-    password BYTEA,
-    group_id SMALLINT REFERENCES yt_group (id),
-    email VARCHAR(128),
-    date TIMESTAMP WITHOUT TIME ZONE,
-    ip VARCHAR(20)    
 );
 
 /* Insert default groups */

@@ -57,7 +57,8 @@ router.post('/', function(req, res, next) {
                 });
             };
         });
-        done();
+        
+        client.release();
     });
     
     

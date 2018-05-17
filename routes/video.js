@@ -29,6 +29,8 @@ router.get('/:serialId', function(req, res, next) {
             
             
         });
+        
+        client.release();
     });
 
 });
