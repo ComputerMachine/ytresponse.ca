@@ -29,6 +29,7 @@ $(function() {
                     if (now == end) {
                         player.pauseVideo();
                         return;
+                    }
                     $("#time").text(now);
                     check();
                 }, 1000);

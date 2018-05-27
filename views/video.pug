@@ -10,17 +10,6 @@ block content
     
     script.
         $(function() {
-            var lightsOff = function() {
-                $("nav").css({opacity: 0}, 1000);
-                $("body").animate({backgroundColor: "black"});
-            },
-            lightsOn = function() {
-                $("nav").animate({opacity: 1}, 1000);
-                $("body").animate({backgroundColor: "white"});
-            };
-            
-            lightsOff();
-            
             var getPlayerVars = function(videoId) {
                 var playerVars = {};
                 switch (videoId) {
@@ -41,10 +30,21 @@ block content
                 var player;
                 var handlers = {};
                 
-                handlers[YT.PlayerState.ENDED] = lightsOn;
-                handlers[YT.PlayerState.PAUSED] = lightsOn;
-                handlers[YT.PlayerState.PLAYING] = lightsOff;
-
+                handlers[YT.PlayerState.ENDED] = () => {
+                    console.log("ended");
+                    $("nav").animate({opacity: 1});
+                    $("body").removeClass("lights-off");
+                }
+                handlers[YT.PlayerState.PAUSED] = () => {
+                    console.log("paused");
+                    $("nav").animate({opacity: 1});
+                    $("body").removeClass("lights-off");
+                }
+                handlers[YT.PlayerState.PLAYING] = () => {
+                    console.log("playin");
+                    $("nav").animate({opacity: 0});
+                    $("body").addClass("lights-off");
+                }
                 /*var timeoutQueued = false;
                 handlers[YT.PlayerState.PLAYING] = function() {
                     if (!timeoutQueued && player.getVideoData().video_id == 'HKK4KmDlj8U') {
