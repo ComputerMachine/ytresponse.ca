@@ -3,16 +3,6 @@ var pool = require('../../db');
 var router = express.Router();
 var project = 'Youtube Response';
 
-/*
-var getUserId = function(username) {
-    pool.connect(function(err, client, done) {
-        var usernameQuery = "SELECT id FROM yt_user WHERE username = $1";
-        client.query(usernameQuery, [username], function(clientErr, clientRes) {
-            if (clientErr) console.log(clientErr);
-            return clientRes.rows[0].id;
-        });
-    });
-};*/
 
 router.get('/', function(req, res, next) {
     res.render('response/create', {
@@ -21,58 +11,37 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-    var username = req.session.auth.username;
-    var title = req.body.title;
-    var videoId = req.body.videoId;
-    var start = req.body.start;
-    var end = req.body.end;
-    var comment = req.body.comment;
-    var autoplay = 1;
-    var script = req.body.script;
-    
-    pool.connect(function(err, client, done) {
-        if (err) {
-            console.log(err);
-            return res.status(500);
-        }
-        var createResponseQuery = 
-            "INSERT INTO yt_video(author_id, title, video_id, video_start, video_end, autoplay, script, date)\
-            VALUES($1, $2, $3, $4, $5, $6, $7, NOW())";
-        var getUserIdQuery = "SELECT id FROM yt_user WHERE username = $1";
-        client.query(getUserIdQuery, [username], function(clientErr, clientRes) {
-            if (clientErr) {
-                console.log(err);
-                return res.status(500);
-            }
-            var userId = clientRes.rows[0].id;
-            client.query(createResponseQuery, [userId, title, videoId, start, end, autoplay, script], function(clientErr, clientRes) {
-                console.log("she's done");
-            });
-        });
-        done();
-    });
-    
-    
-    /*
-    pool.connect(function(err, client, done) {
-        if (err) {
-            console.log(err);
+    var video = {
+        author: typeof req.session.auth == "undefined" ? "Guest" : req.session.auth.username,
+        title: req.body.title,
+        id: req.body.videoId,
+        start: req.body.start,
+        end: req.body.end,
+        comment: req.body.comment,
+        autoplay: 1, /* temporarily force videos to autoplay */
+        script: req.body.script
+    };
+
+    pool.connect((err, client, done) => {
+        if (typeof client == "undefined") {
+            res.send("Unable to connect to database.");
             return;
         }
-        
+ 
         var createResponseQuery = 
-            "INSERT INTO yt_video(author_id, title, video_id, video_start, video_end, autoplay, script, date)\
-            VALUES($1, $2, $3, $4, $5, $6, $7, NOW())";
-
-        client.query(createResponseQuery, [userId, title, videoId, start, end, autoplay, script], function(clientErr, clientRes) {
-            if (clientErr) {
-                console.log(clientErr);
-                return;
-            }
-        });
+            "INSERT INTO yt_video(author_id, title, video_id, video_start, video_end, autoplay, script, date) \
+            VALUES((SELECT id FROM yt_user WHERE username = $1), $2, $3, $4, $5, $6, $7, NOW())";
+        
+        client.query(createResponseQuery, [video.author, video.title, video.id, video.start, video.end, video.autoplay, video.script])
+            .then(clientRes => {
+                console.log("response added");
+            })
+            .catch(e => {
+                console.log("--------------------------- WHAT THE FUCK: ", e);
+            });
         done();
-    });*/    
-    
+    });
+  
     res.render('response/create', {
         title: project
     });

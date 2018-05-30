@@ -19,9 +19,9 @@ block content
                         playerVars.end = 70;
                         break;
                     default:
-                        playerVars.start = '#{playerData.video_start}',
-                        playerVars.end = '#{playerData.video_end}',
-                        playerVars.autoplay = '#{playerData.autoplay}'
+                        playerVars.start = '#{videoData.video_start}',
+                        playerVars.end = '#{videoData.video_end}',
+                        playerVars.autoplay = '#{videoData.autoplay}'
                 }
                 return playerVars;
             }; 
@@ -58,8 +58,8 @@ block content
                 };     
                 */
                 TazGHelpers.addYTPlayer("player", {
-                    videoId: '#{playerData.video_id}',
-                    playerVars: getPlayerVars('#{playerData.video_id}')
+                    videoId: '#{videoData.video_id}',
+                    playerVars: getPlayerVars('#{videoData.video_id}')
                 }, 
                 function(p) {
                     player = p;

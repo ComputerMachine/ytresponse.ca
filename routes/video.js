@@ -7,32 +7,33 @@ var project = "Youtube Response";
 router.get('/', function(req, res, next) {
     res.render('video', {
         title: project,
-        playerData: {video_id: "9Koln22mx6c", start: 65, end:70, autoplay:1}
+        videoData: {
+            video_id: "9Koln22mx6c", 
+            start: 65, 
+            end:70, 
+            autoplay:1
+        }
     })
 });
 
 router.get('/:serialId', function(req, res, next) {
     var serialId = req.params.serialId;
-    console.log("serial id: ", serialId);
+    var selectVideoQuery = "SELECT video_id, video_start, video_end, autoplay, author_id, \
+    (SELECT username FROM yt_user WHERE id = author_id) AS author_username FROM yt_video WHERE id = $1";
     
-    pool.connect(function(err, client, done) {
-        var videoQuery = "SELECT video_id, video_start, video_end, autoplay, author_id FROM yt_video WHERE id = $1";
-        client.query(videoQuery, [serialId], function(clientErr, clientRes) {
-            if (clientErr) console.log(clientErr);
-            
-            console.log(clientRes);
-            
-            res.render('video', {
-                title: project,
-                playerData: clientRes.rows[0]
+    pool.connect((err, client, done) => {
+        client.query(selectVideoQuery, [serialId])
+            .then(clientRes => {
+                res.render("video", {
+                    title: project,
+                    videoData: clientRes.rows[0]
+                });
+            })
+            .catch(e => {
+                console.error("aight wtf", e);
             });
-            
-            
-        });
-        
-        client.release();
+        done();
     });
-
 });
 
 module.exports = router;
