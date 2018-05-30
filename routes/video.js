@@ -9,8 +9,8 @@ router.get('/', function(req, res, next) {
         title: project,
         videoData: {
             video_id: "9Koln22mx6c", 
-            start: 65, 
-            end:70, 
+            video_start: 65, 
+            video_end:70, 
             autoplay:1
         }
     })
