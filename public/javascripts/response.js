@@ -7,6 +7,15 @@ $(function() {
         };  
         return playerVars;
     }; 
+    
+    var onPlayerStateChange = e => {
+        switch (e.data) {
+            case 5:
+                console.log("cued & playing");
+                var start = parseInt($("#start").val());
+                player.seekTo(start);
+        }
+    };
 
     var player;
     var handlers = {};
@@ -17,29 +26,16 @@ $(function() {
             start: 154,
             end: 192,
             controls: 1
+        },
+        events: {
+            'onStateChange': onPlayerStateChange
         }
     },
     function(p) {
         player = p;
-        handlers[YT.PlayerState.PLAYING] = function() {
-            var end = $("#end").val();
-            var check = function() {
-                setTimeout(function() {
-                    var now = Math.floor(player.getCurrentTime());
-                    if (now == end) {
-                        player.pauseVideo();
-                        return;
-                    }
-                    $("#time").text(now);
-                    check();
-                }, 1000);
-            };
-            check();
-        };
-        TazGHelpers.addYTPlayerStateHandlers(player, handlers);
         console.log(player);
-    }); 
-
+    });
+    
     $("#preview").click(function(e) {
         e.preventDefault();
         TazGHelpers.whenYoutubeApiReady(function() {
@@ -49,50 +45,50 @@ $(function() {
         });
     });
     
-    $("#video-id").change(function() {        
-        var videoStart = $("#start").val();
-        var videoEnd = $("#end").val();
-        var videoId = $(this).val();
+    $("#video-id").change(function() {
+        video = {
+            start: $("#start").val(),
+            end: $("#end").val(),
+            id: $(this).val()
+        };
         
-        if (videoId == "") return;
-        if (videoStart == "" && videoEnd == "") player.cueVideoById(videoId);
-        else {
-            player.cueVideoById(videoId, videoStart, videoEnd);
-        }
+        if (video.id == "") return;
+        else { updatePlayer(); }
+    });
+    
+    var updatePlayer = () => {
+        var startVal = parseInt($("#start").val());
+        var endVal = parseInt($("#end").val());
+        var start = isNaN(startVal) ? 0 : startVal;
+        var end = isNaN(endVal) ? 700 : endVal;
+        
+        console.log("start&end: ",start, end);
+        
+        player.cueVideoById({
+            videoId: $("#video-id").val(),
+            startSeconds: start,
+            endSeconds: end
+        });
+    };    
+    
+    $("#start, #end").change(() => {
+        //console.log("start and end times modified");
+        //var start = parseInt($("#start").val());
+        //player.seekTo(start);
+        updatePlayer();
+        //console.log("updating playe.r..");
     });
     
     $("#start").change(function() {
-        var time = parseInt($(this).val(), 10);
-        player.seekTo(time);
+        //var time = parseInt($(this).val(), 10);
+        //player.seekTo(time);
     });
     
     $("#end").change(function() {
-        var start = parseInt($("#start").val());
-        var end = parseInt($(this).val());
-        player.seekTo(start);
+        //var start = parseInt($("#start").val());
+        //var end = parseInt($(this).val());
+        //player.seekTo(start);
         
     });
-    
-    /* add yt player handlers */
-    
-    /*
-    $("#yturl").change(function() {
-        var videoId = $(this).val();
-        console.log(videoId);
-        
-        TazGHelpers.whenYoutubeApiReady(function() {
-            //var handlers = {};
-            //var player;
 
-            TazGHelpers.addYTPlayer("player", {
-                videoId: videoId,
-                controls: 1,
-                playerVars: getPlayerVars('#{videoId}')
-            });
-            
-            function(p) {
-                player = p;
-                TazGHelpers.addYTPlayerStateHandlers(player, handlers);
-                console.log(player);
-            });*/
 })

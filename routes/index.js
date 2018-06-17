@@ -38,7 +38,8 @@ router.get('/', (req, res, next) => {
                 console.log("--------------------------- WHAT THE FUCK: ", e);
             });
             
-        client.release();
+        //client.release();
+        done();
     });
 });
 

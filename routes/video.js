@@ -19,7 +19,7 @@ router.get('/', function(req, res, next) {
 router.get('/:serialId', function(req, res, next) {
     var serialId = req.params.serialId;
     var selectVideoQuery = "SELECT video_id, video_start, video_end, autoplay, author_id, \
-    (SELECT username FROM yt_user WHERE id = author_id) AS author_username FROM yt_video WHERE id = $1";
+    (SELECT username FROM yt_user WHERE id = author_id) AS author_username, title FROM yt_video WHERE id = $1";
     
     pool.connect((err, client, done) => {
         client.query(selectVideoQuery, [serialId])
