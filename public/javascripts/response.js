@@ -10,7 +10,7 @@ $(function() {
     
     var onPlayerStateChange = e => {
         switch (e.data) {
-            case 5:
+            case 5: // YT.PlayerState.CUED
                 console.log("cued & playing");
                 var start = parseInt($("#start").val());
                 player.seekTo(start);

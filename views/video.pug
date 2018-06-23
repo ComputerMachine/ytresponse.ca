@@ -8,13 +8,12 @@ block content
 
     script(src='../javascripts/jquery-3.3.1.min.js')
     script(src='../javascripts/helpers.js')
-    
     script.
         $(function() {
-            var getPlayerVars = function(videoId) {
-                var playerVars = {};
+            var getPlayerVars = videoId => {
+                playerVars = {};
                 switch (videoId) {
-                    case '9Koln22mx6c':
+                    case '9Koln22mx6c': // what have you done
                         playerVars.autoplay = 1;
                         playerVars.start = 65;
                         playerVars.end = 70;
@@ -25,47 +24,29 @@ block content
                         playerVars.autoplay = '#{videoData.autoplay}'
                 }
                 return playerVars;
-            }; 
-            
-            TazGHelpers.whenYoutubeApiReady(function() {
-                var player;
-                var handlers = {};
+            };
+
+            var player, videoId = "#{videoData.video_id}";
+            var handlers = {};
+
+            TazGHelpers.whenYoutubeApiReady(() => {
+                var pVars = getPlayerVars(videoId);
                 
                 handlers[YT.PlayerState.ENDED] = () => {
-                    console.log("ended");
-                    $("nav").animate({opacity: 1});
-                    $("body").removeClass("lights-off");
-                }
-                handlers[YT.PlayerState.PAUSED] = () => {
-                    console.log("paused");
-                    $("nav").animate({opacity: 1});
-                    $("body").removeClass("lights-off");
-                }
-                handlers[YT.PlayerState.PLAYING] = () => {
-                    console.log("playin");
-                    $("nav").animate({opacity: 0});
-                    $("body").addClass("lights-off");
-                }
-                /*var timeoutQueued = false;
-                handlers[YT.PlayerState.PLAYING] = function() {
-                    if (!timeoutQueued && player.getVideoData().video_id == 'HKK4KmDlj8U') {
-                        setTimeout(function() {
-                            $("#player-container").animate({opacity: 0}, 500);
-                            timeoutQueued = true;
-                        }, 8600);
-                    }
-                    $("#player-container").animate({opacity: 1}, 250);
-                    console.log("playing");
-                };     
-                */
+                    player.cueVideoById({
+                        videoId: videoId,
+                        startSeconds: pVars.start,
+                        endSeconds: pVars.end
+                    });
+                };
+                
                 TazGHelpers.addYTPlayer("player", {
-                    videoId: '#{videoData.video_id}',
-                    playerVars: getPlayerVars('#{videoData.video_id}')
+                    videoId: videoId,
+                    playerVars: pVars
                 }, 
                 function(p) {
                     player = p;
-                    TazGHelpers.addYTPlayerStateHandlers(player, handlers);
-                    console.log(player);
+                    TazGHelpers.addYTPlayerStateHandlers(player, handlers); 
                 });
             });
         });
