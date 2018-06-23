@@ -1,52 +1,85 @@
-extends layout
+doctype html
+html
+    head
+        title= title
+        link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+        link(rel='stylesheet', href='/stylesheets/style.css')
+        style.
+            body { 
+                background-color: black; 
+            }
+            .nav-container {
+                color: #464646;
+            }
+            .nav-container a {
+                color: #7F7E7E;
+            }
+            .nav-container a:hover {
+                color: #464646;
+            }
+    body
+        div.container
+            nav.navbar.navbar-expand-sm.nav-container
+                a.navbar-brand YT Response
+                ul.navbar-nav.mr-auto
+                    li.nav-item
+                        a(href="/").nav-link Home
+                    if !(auth)
+                        li.nav-item
+                            a(href="/login").nav-link Log in
+                        li.nav-item
+                            a(href="/register").nav-link Register
+                    if auth
+                        li.nav-item
+                            a(href="/logout").nav-link Log out
+                        span.text-right Welcome back, #{auth.username}.
+                    
+            h1.text-center.text-light= videoData.title
+            div#video-content
+                div#player-container
+                    div#player
 
-block content
-    h1.text-center.text-light= videoData.title
-    div#video-content
-        div#player-container
-            div#player
+            script(src='../javascripts/jquery-3.3.1.min.js')
+            script(src='../javascripts/helpers.js')
+            script.
+                $(function() {
+                    var getPlayerVars = videoId => {
+                        playerVars = {};
+                        switch (videoId) {
+                            case '9Koln22mx6c': // what have you done
+                                playerVars.autoplay = 1;
+                                playerVars.start = 65;
+                                playerVars.end = 70;
+                                break;
+                            default:
+                                playerVars.start = '#{videoData.video_start}',
+                                playerVars.end = '#{videoData.video_end}',
+                                playerVars.autoplay = '#{videoData.autoplay}'
+                        }
+                        return playerVars;
+                    };
 
-    script(src='../javascripts/jquery-3.3.1.min.js')
-    script(src='../javascripts/helpers.js')
-    script.
-        $(function() {
-            var getPlayerVars = videoId => {
-                playerVars = {};
-                switch (videoId) {
-                    case '9Koln22mx6c': // what have you done
-                        playerVars.autoplay = 1;
-                        playerVars.start = 65;
-                        playerVars.end = 70;
-                        break;
-                    default:
-                        playerVars.start = '#{videoData.video_start}',
-                        playerVars.end = '#{videoData.video_end}',
-                        playerVars.autoplay = '#{videoData.autoplay}'
-                }
-                return playerVars;
-            };
+                    var player, videoId = "#{videoData.video_id}";
+                    var handlers = {};
 
-            var player, videoId = "#{videoData.video_id}";
-            var handlers = {};
-
-            TazGHelpers.whenYoutubeApiReady(() => {
-                var pVars = getPlayerVars(videoId);
-                
-                handlers[YT.PlayerState.ENDED] = () => {
-                    player.cueVideoById({
-                        videoId: videoId,
-                        startSeconds: pVars.start,
-                        endSeconds: pVars.end
+                    TazGHelpers.whenYoutubeApiReady(() => {
+                        var pVars = getPlayerVars(videoId);
+                        
+                        handlers[YT.PlayerState.ENDED] = () => {
+                            player.cueVideoById({
+                                videoId: videoId,
+                                startSeconds: pVars.start,
+                                endSeconds: pVars.end
+                            });
+                        };
+                        
+                        TazGHelpers.addYTPlayer("player", {
+                            videoId: videoId,
+                            playerVars: pVars
+                        }, 
+                        function(p) {
+                            player = p;
+                            TazGHelpers.addYTPlayerStateHandlers(player, handlers); 
+                        });
                     });
-                };
-                
-                TazGHelpers.addYTPlayer("player", {
-                    videoId: videoId,
-                    playerVars: pVars
-                }, 
-                function(p) {
-                    player = p;
-                    TazGHelpers.addYTPlayerStateHandlers(player, handlers); 
                 });
-            });
-        });

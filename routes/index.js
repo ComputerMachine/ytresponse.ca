@@ -13,7 +13,7 @@ router.get('/', (req, res, next) => {
         
         var newestMembers, newestVideos;
         var newestUsersQuery = "SELECT username, date FROM yt_user ORDER BY date DESC LIMIT 5";
-        var newestVideosQuery = "SELECT id, title, video_id, video_start, video_end, autoplay, author_id FROM yt_video ORDER BY DATE DESC LIMIT 5"
+        var newestVideosQuery = "SELECT id, title, video_id, video_start, video_end, autoplay, author_id FROM yt_video ORDER BY DATE DESC"
         
         client.query(newestUsersQuery)
             .then(clientRes => {
