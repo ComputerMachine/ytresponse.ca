@@ -72,23 +72,6 @@ $(function() {
     };    
     
     $("#start, #end").change(() => {
-        //console.log("start and end times modified");
-        //var start = parseInt($("#start").val());
-        //player.seekTo(start);
         updatePlayer();
-        //console.log("updating playe.r..");
     });
-    
-    $("#start").change(function() {
-        //var time = parseInt($(this).val(), 10);
-        //player.seekTo(time);
-    });
-    
-    $("#end").change(function() {
-        //var start = parseInt($("#start").val());
-        //var end = parseInt($(this).val());
-        //player.seekTo(start);
-        
-    });
-
 })
