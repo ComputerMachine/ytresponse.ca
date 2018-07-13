@@ -1,5 +1,5 @@
 $(function() {
-    var getPlayerVars = function() {
+    var getPlayerVars = () => {
         var playerVars = {
             autoplay: $("#autoplay").is(":checked") ? 1 : 0,
             start:    $("#start").val(),
@@ -7,13 +7,22 @@ $(function() {
         };  
         return playerVars;
     }; 
+
+    var newCuedVideo = false;
+    var init;
     
     var onPlayerStateChange = e => {
         switch (e.data) {
-            case 5: // YT.PlayerState.CUED
-                console.log("cued & playing");
-                var start = parseInt($("#start").val());
-                player.seekTo(start);
+            case 1:
+                if (newCuedVideo) {
+                    player.seekTo(parseInt($("start").val()));
+                    newCuedVideo = false;
+                }
+                break;
+            case 5:
+                if (player.getVideoData().video_id == "oNFC0YzCSWc") return;
+                player.playVideo();
+                break;
         }
     };
 
@@ -24,18 +33,22 @@ $(function() {
         videoId: 'oNFC0YzCSWc',
         playerVars: {
             start: 154,
-            end: 192,
+            end: 193,
             controls: 1
         },
         events: {
-            'onStateChange': onPlayerStateChange
+            'onStateChange': onPlayerStateChange,
         }
-    },
-    function(p) {
-        player = p;
-        console.log(player);
+    }, p => player = p);
+    
+    $("#preview").click(e => {
+        e.preventDefault();
+        var start = parseInt($("#start").val(), 10);
+        player.seekTo(start);
+        player.playVideo();
     });
     
+    /*
     $("#preview").click(function(e) {
         e.preventDefault();
         TazGHelpers.whenYoutubeApiReady(function() {
@@ -44,34 +57,31 @@ $(function() {
             player.playVideo();
         });
     });
-    
+    */
     $("#video-id").change(function() {
-        video = {
-            start: $("#start").val(),
-            end: $("#end").val(),
-            id: $(this).val()
-        };
-        
-        if (video.id == "") return;
-        else { updatePlayer(); }
+        if ($(this).val() == "") return;
+        updatePlayer();
     });
     
     var updatePlayer = () => {
-        var startVal = parseInt($("#start").val());
-        var endVal = parseInt($("#end").val());
-        var start = isNaN(startVal) ? 0 : startVal;
-        var end = isNaN(endVal) ? 700 : endVal;
-        
-        console.log("start&end: ",start, end);
-        
-        player.cueVideoById({
-            videoId: $("#video-id").val(),
-            startSeconds: start,
-            endSeconds: end
-        });
+        var startVal = parseInt($("#start").val()), 
+            endVal = parseInt($("#end").val()),
+            start = isNaN(startVal) ? 0 : startVal,
+            end = isNaN(endVal) ? undefined : endVal,
+            options = {};
+
+        options.videoId = $("#video-id").val();
+        options.startSeconds = start;        
+
+        if (typeof end != "undefined") {
+            options.endSeconds = end;
+        }
+
+        player.cueVideoById(options);
     };    
     
     $("#start, #end").change(() => {
         updatePlayer();
+        console.log(player);
     });
 })
