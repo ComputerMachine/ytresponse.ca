@@ -20,7 +20,7 @@ $(function() {
                 }
                 break;
             case 5:
-                if (player.getVideoData().video_id == "oNFC0YzCSWc") return;
+                if (player.getVideoData().video_id == "oNFC0YzCSWc") return; // do nothing if the video cued is a 'loading video'
                 player.playVideo();
                 break;
         }
@@ -48,16 +48,6 @@ $(function() {
         player.playVideo();
     });
     
-    /*
-    $("#preview").click(function(e) {
-        e.preventDefault();
-        TazGHelpers.whenYoutubeApiReady(function() {
-            var start = parseInt($("#start").val(), 10);
-            player.seekTo(start);
-            player.playVideo();
-        });
-    });
-    */
     $("#video-id").change(function() {
         if ($(this).val() == "") return;
         updatePlayer();
@@ -78,10 +68,12 @@ $(function() {
         }
 
         player.cueVideoById(options);
-    };    
+    };
+
+    $("#start, #end").change(updatePlayer);
     
+    /*
     $("#start, #end").change(() => {
         updatePlayer();
-        console.log(player);
-    });
+    });*/
 })

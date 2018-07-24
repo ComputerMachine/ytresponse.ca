@@ -71,8 +71,6 @@ a {
 /* allow authenticated users to include justom scripts in their pages */
 
 
-
-
 .lights-off {
     transition: background-color 0.2s ease;
     background-color: black;

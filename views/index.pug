@@ -4,20 +4,23 @@ block content
     div.container
         div.row
             div.col-md-6
-                a(href="/create-response").btn.btn-outline-primary Create new response
-                a(href="#").btn.btn-outline-primary List my responses
-                a(href="#").btn.btn-outline-primary Edit my profile
+                div.btn-group
+                    a(href="/create-response").btn.btn-outline-primary Create new response
+                    a(href="#").btn.btn-outline-primary List my responses
+                    a(href="#").btn.btn-outline-primary Edit my profile
+    
+        hr
     
         div.row
             div.col-md-6
-                h1 newest users
+                h1 New users
                 div.list-group
                     if typeof newMembers != "undefined"
                         each member in newMembers
                             a(href=`/u/${member.username}`).list-group-item.list-group-item-action=member.username
-                    
+                 
             div.col-md-6
-                h1 newest responses
+                h1 New videos
                 ul.list-group
                     if typeof newVideos != "undefined"
                         each video in newVideos

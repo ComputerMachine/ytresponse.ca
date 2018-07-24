@@ -4,24 +4,26 @@ html
         title= title
         link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
         link(rel='stylesheet', href='/stylesheets/style.css')
+        link(rel="stylesheet", href="https://use.fontawesome.com/releases/v5.1.0/css/all.css", integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt", crossorigin="anonymous")
         script(src='/javascripts/jquery-3.3.1.min.js')
     body
         div.container
-            nav.navbar.navbar-expand-sm
-                a.navbar-brand YT Response
-                ul.navbar-nav.mr-auto
-                    li.nav-item
-                        a(href="/").nav-link Home
-                    if !(auth)
+            nav.navbar.navbar-expand-lg
+                a.navbar-brand YTResponse
+                div.collapse.navbar-collapse
+                    ul.navbar-nav.mr-auto
                         li.nav-item
-                            a(href="/login").nav-link Log in
-                        li.nav-item
-                            a(href="/register").nav-link Register
-                    if auth
-                        li.nav-item
-                            a(href="/logout").nav-link Log out
-                        span.text-right Welcome back, #{auth.username}.
-                    
+                            a(href="/").nav-link Home
+                        if !(auth)
+                            li.nav-item
+                                a(href="/login").nav-link Log in
+                            li.nav-item
+                                a(href="/register").nav-link Register
+                        if auth
+                            li.nav-item
+                                a(href="/logout").nav-link Log out
+                            span.text-right Welcome back, #{auth.username}.
+            
             block content
             
         script(src='/javascripts/helpers.js')

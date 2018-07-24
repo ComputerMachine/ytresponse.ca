@@ -1,7 +1,7 @@
 doctype html
 html
     head
-        title= title
+        title #{title} - #{videoData.title}
         link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
         link(rel='stylesheet', href='/stylesheets/style.css')
         style.
@@ -59,8 +59,9 @@ html
                         return playerVars;
                     };
 
-                    var player, videoId = "#{videoData.video_id}";
-                    var handlers = {};
+                    var player, 
+                        videoId = "#{videoData.video_id}",
+                        handlers = {};
 
                     TazGHelpers.whenYoutubeApiReady(() => {
                         var pVars = getPlayerVars(videoId);
