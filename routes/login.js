@@ -14,24 +14,22 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function(request, response, next) {
     pool.connect(function(err, client, done) {
-        if (err) console.log("DB ERROR");
-        
         var sqlQuery = "SELECT username, encode(password::bytea, 'escape') AS pw FROM yt_user WHERE LOWER(username) = $1";
+        var ytuser = {};
         
         client.query(sqlQuery, [request.body.username.toLowerCase()], function(clientErr, clientRes) {
-            if (err) console.log(err);
+            if (clientErr) console.log(err);
             
             if (typeof clientRes.rows[0] == "undefined") {
                 return response.send("That username doesn't exist.");
             }
-
-            var hashedPassword = clientRes.rows[0].pw;
-            var username = clientRes.rows[0].username;
             
-            bcrypt.compare(request.body.password, hashedPassword, function(err, res) {
+            ytuser.username = clientRes.rows[0].username;
+            ytuser.pw = clientRes.rows[0].pw;
+
+            bcrypt.compare(request.body.password, ytuser.pw, function(err, res) {
                 if (!res) return response.send("Invalid password or username.");
-                
-                request.session.auth = {username: username};
+                request.session.auth = {username: ytuser.username};
                 response.redirect("../");
             });
         });

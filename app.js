@@ -31,6 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
     secret: 'closebutnoguitar', 
     cookie: {maxAge: 1000*60*60},
+    resave: true,
     saveUninitialized: true
 }));
 

@@ -15,7 +15,7 @@ $(function() {
         switch (e.data) {
             case 1:
                 if (newCuedVideo) {
-                    player.seekTo(parseInt($("start").val()));
+                    player.seekTo(parseFloat($("start").val())).toFixed(1);
                     newCuedVideo = false;
                 }
                 break;
@@ -43,7 +43,7 @@ $(function() {
     
     $("#preview").click(e => {
         e.preventDefault();
-        var start = parseInt($("#start").val(), 10);
+        var start = parseFloat($("#start").val(), 10).toFixed(1);
         player.seekTo(start);
         player.playVideo();
     });
@@ -54,8 +54,8 @@ $(function() {
     });
     
     var updatePlayer = () => {
-        var startVal = parseInt($("#start").val()), 
-            endVal = parseInt($("#end").val()),
+        var startVal = parseFloat($("#start").val()).toFixed(1), 
+            endVal = parseFloat($("#end").val()).toFixed(1),
             start = isNaN(startVal) ? 0 : startVal,
             end = isNaN(endVal) ? undefined : endVal,
             options = {};
@@ -72,8 +72,8 @@ $(function() {
 
     $("#start, #end").change(updatePlayer);
     
-    /*
-    $("#start, #end").change(() => {
-        updatePlayer();
-    });*/
+    setInterval(() => {
+        $("#time").text(player.getCurrentTime().toFixed(1));
+    }, 100);
+
 })
